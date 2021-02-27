@@ -1,0 +1,12 @@
+{
+  "env": {
+    "es2020": true,
+    "mocha": true
+  },
+  "extends": ["airbnb-base"],
+  "rules": {
+    "prefer-template": "error",
+    "prefer-const": "error",
+    "max-len": ["error", 120]
+  }
+}
