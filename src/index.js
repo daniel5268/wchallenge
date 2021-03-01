@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 
-const LoggerMiddleware = require('./middlewares/LoggerMiddleware');
+const ErrorsHandlerMiddleware = require('./middlewares/ErrorsHandlerMiddleware');
 const { initLogger, logger } = require('./utils/Logger');
 const routes = require('./routes');
 
@@ -12,9 +12,9 @@ initLogger();
 
 const app = express();
 
-app.use(LoggerMiddleware);
 app.use(express.json());
 app.use(routes);
+app.use(ErrorsHandlerMiddleware);
 
 app.listen(PORT, () => {
   logger.info(`wChallenge listening at :${PORT}`);

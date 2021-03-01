@@ -1,7 +1,8 @@
 const HealthCheckControllers = module.exports;
 
+const { logger } = require('../../utils/Logger');
+
 HealthCheckControllers.healthCheck = (req, res) => {
-  const { logger } = req;
   const section = 'HealthCheckControllers.healthCheck';
   logger.debug(section, 'starts');
 

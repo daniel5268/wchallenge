@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
 
-npm run test
+npm run nycTest
 npm run lint
+npm run coverage

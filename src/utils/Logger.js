@@ -2,7 +2,7 @@ const Logger = module.exports;
 
 const log4js = require('log4js');
 
-const { LOG_LEVEL = 'info' } = process.env;
+const { LOG_LEVEL } = process.env;
 
 const W_CHALLENGE = 'wChallenge';
 

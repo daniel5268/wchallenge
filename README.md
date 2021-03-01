@@ -1,23 +1,24 @@
 # wChallenge
 
 * Setup
+  - Install node version [^14.16.0] (https://nodejs.org/en/)
+  - Create a postgres database
+  - npm i
+  - cp .env.example .env
+  - set your environment variables values in the .env file
+  - npm run knex migrate:latest
 
-- Use node version [^14.16.0] (https://nodejs.org/en/) you must install it or use nvm
-- npm i
-- set your environment variables in a file named .env, an example can be found in .env.example
+* Start server in develop mode
+  - npm run dev
 
-* * Start server in develop mode
+* Start server
+  - npm run start
 
-- npm run dev
+* Run tests
+  - npm run test
 
-* * Start server
+* Run tests with coverage dashboard
+  - npm run nycTest
 
-- npm run start
-
-* * Run tests
-
-- npm run test
-
-* * To activate githooks
-
-- git config core.hooksPath .githooks 
+* Activate githooks
+  - git config core.hooksPath .githooks 
