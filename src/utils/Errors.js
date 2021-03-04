@@ -4,7 +4,7 @@ const Errors = module.exports;
 
 const {
   statusCodes: {
-    BAD_REQUEST, UNAUTHORIZED, NOT_FOUND,
+    BAD_REQUEST, UNAUTHORIZED, NOT_FOUND, BAD_GATEWAY,
   },
 } = require('../constants/HttpConstants');
 
@@ -36,8 +36,17 @@ class NotFoundError extends HttpError {
   }
 }
 
+class BadGatewayError extends HttpError {
+  constructor(message = 'Bad gateway') {
+    super(message);
+    this.status = BAD_GATEWAY;
+  }
+}
+
 Errors.BadRequestError = BadRequestError;
 
 Errors.UnauthorizedError = UnauthorizedError;
 
 Errors.NotFoundError = NotFoundError;
+
+Errors.BadGatewayError = BadGatewayError;

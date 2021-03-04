@@ -14,10 +14,10 @@
 * Start server
   - npm run start
 
-* Run tests
+* Run tests WARNING before running this, make sure your .env variables are set for develop, if not, the database integrity may be compromised
   - npm run test
 
-* Run tests with coverage dashboard
+* Run tests with coverage dashboard WARNING before running this, make sure your .env variables are set for develop, if not, the database integrity may be compromised
   - npm run nycTest
 
 * Activate githooks

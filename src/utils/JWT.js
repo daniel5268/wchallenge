@@ -21,7 +21,6 @@ JWT.generateToken = (payload) => {
 JWT.verify = (token) => {
   const verifyOptions = {
     issuer: TOKEN_ISSUER,
-    expiresIn: `${TOKEN_EXPIRATION_TIME}h`,
   };
 
   return jsonwebtoken.verify(token, TOKEN_PRIVATE_KEY, verifyOptions);

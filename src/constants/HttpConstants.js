@@ -8,4 +8,5 @@ HttpConstants.statusCodes = {
   FORBIDDEN: 403,
   NOT_FOUND: 404,
   INTERNAL_ERROR: 500,
+  BAD_GATEWAY: 502,
 };
