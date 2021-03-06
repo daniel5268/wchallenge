@@ -1,3 +1,5 @@
+const { ALLOWED_PREFERRED_COINS } = require('../UsersConstants');
+
 const stringSchema = { type: 'string', minLength: 2, maxLength: 50 };
 
 const namesSchema = {
@@ -17,7 +19,7 @@ module.exports = {
       last_name: namesSchema,
       username: alphaNumericSchema,
       password: { ...alphaNumericSchema, minLength: 8 },
-      preferred_coin: { type: 'string', enum: ['EUR', 'USD', 'ARS'] },
+      preferred_coin: { type: 'string', enum: Object.values(ALLOWED_PREFERRED_COINS) },
     },
     additionalProperties: false,
     required: ['name', 'last_name', 'username', 'password', 'preferred_coin'],

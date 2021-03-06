@@ -1,5 +1,8 @@
 const UsersTestData = module.exports;
 
+const { cryptoCoins } = require('./CryptoCoinsTestData');
+const JWT = require('../../src/utils/JWT');
+
 UsersTestData.repeatedUsername = 'wolox';
 
 UsersTestData.successfulCreateUsersBody = [
@@ -31,6 +34,12 @@ UsersTestData.expectedVerifiedToken = {
   username: this.user.username,
 };
 
+UsersTestData.token = JWT.generateToken(this.expectedVerifiedToken);
+
+UsersTestData.invalidUserId = 1234123;
+
+UsersTestData.invalidUserToken = JWT.generateToken({ user_id: this.invalidUserId, username: 'wat' });
+
 UsersTestData.usernames = this.successfulCreateUsersBody.map((user) => user.username);
 
 UsersTestData.duplicateUsernameCreateUsersBody = [
@@ -50,8 +59,18 @@ UsersTestData.expectedCreateUsersResponseBody = this.successfulCreateUsersBody.m
   return restUserInfo;
 });
 
-UsersTestData.getBodyWithoutRequiredProperty = (property) => {
+UsersTestData.getCreateUserBodyWithoutRequiredProperty = (property) => {
   const [{ [property]: _, ...incompleteUser }] = this.successfulCreateUsersBody;
 
   return [incompleteUser];
 };
+
+UsersTestData.successfulAddCryptoCoinsBody = {
+  crypto_coin_ids: cryptoCoins.map(({ external_id: externalId }) => externalId),
+};
+
+UsersTestData.expectedCreatedUsersCryptoCoins = [
+  { user_id: 1, crypto_coin_id: 1 },
+  { user_id: 1, crypto_coin_id: 2 },
+  { user_id: 1, crypto_coin_id: 3 },
+];

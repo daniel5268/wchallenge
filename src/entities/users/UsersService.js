@@ -1,10 +1,14 @@
 const UsersService = module.exports;
 
-const _ = require('lodash');
+const lodash = require('lodash');
 
 const UsersRepository = require('./UsersRepository');
-const { BadRequestError, NotFoundError, UnauthorizedError } = require('../../utils/Errors');
+const UsersCryptoCoinsRepository = require('../usersCryptoCoins/UsersCryptoCoinsRepository');
+const {
+  BadRequestError, NotFoundError, UnauthorizedError, ForbiddenError,
+} = require('../../utils/Errors');
 const Secrets = require('../../utils/Secrets');
+const CryptoCoinsService = require('../cryptoCoins/CryptoCoinsService');
 const JWT = require('../../utils/JWT');
 
 function getUserNames(users) {
@@ -13,7 +17,7 @@ function getUserNames(users) {
 
 function getRepeatedUsernamesFromUsers(users) {
   const repeatedUsernames = [];
-  const usersGroupedByUsername = _.groupBy(users, 'username');
+  const usersGroupedByUsername = lodash.groupBy(users, 'username');
 
   Object.keys(usersGroupedByUsername).forEach((username) => {
     if (usersGroupedByUsername[username].length > 1) repeatedUsernames.push(username);
@@ -75,4 +79,41 @@ UsersService.login = async (username, password) => {
     token,
     expiration_time: JWT.EXPIRATION_TIME,
   };
+};
+
+UsersService.addCryptoCoins = async (loggedUserId, targetUserId, cryptoCoinIds) => {
+  if (loggedUserId !== +targetUserId) throw new ForbiddenError('It\'s not allowed to add coins to another user');
+
+  const user = await UsersRepository.findById(targetUserId);
+
+  if (!user) throw new NotFoundError(`User with id ${targetUserId} not found`);
+
+  const cryptoCoins = await CryptoCoinsService.createCryptoCoinsIfNeeded(cryptoCoinIds);
+
+  const existingUsersCryptoCoins = await UsersCryptoCoinsRepository.findByUserIdAndCryptoCoins(
+    targetUserId, cryptoCoins,
+  );
+
+  if (existingUsersCryptoCoins.length) {
+    throw new BadRequestError('Some of the provided coins already belong to the user');
+  }
+
+  const UsersCryptoCoinsInfo = cryptoCoins.map(
+    (cryptoCoin) => ({ crypto_coin_id: cryptoCoin.id, user_id: targetUserId }),
+  );
+
+  return UsersCryptoCoinsRepository.insert(UsersCryptoCoinsInfo);
+};
+
+UsersService.getTopCryptoCoins = async (loggedUserId, targetUserId, numberOfCryptoCoins, order) => {
+  if (loggedUserId !== +targetUserId) throw new ForbiddenError();
+
+  const user = await UsersRepository.findById(targetUserId);
+
+  if (!user) throw new NotFoundError();
+
+  const { preferred_coin: preferredCoin } = user;
+  const cryptoCoinIds = await (UsersCryptoCoinsRepository.findByUserId(targetUserId).pluck('crypto_coin_id'));
+
+  return CryptoCoinsService.getTopCryptoCoins(preferredCoin, cryptoCoinIds, numberOfCryptoCoins, order);
 };

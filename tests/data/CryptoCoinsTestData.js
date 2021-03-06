@@ -1,6 +1,6 @@
-const CryptoCoinsData = module.exports;
+const CryptoCoinsTestData = module.exports;
 
-CryptoCoinsData.geckoCoinsInfo = {
+CryptoCoinsTestData.geckoCoinsInfo = {
   data: [
     {
       id: 'polkadot',
@@ -145,7 +145,11 @@ CryptoCoinsData.geckoCoinsInfo = {
   ],
 };
 
-CryptoCoinsData.expectedCoinsInfo = this.geckoCoinsInfo.data.map((coinInfo) => {
+CryptoCoinsTestData.geckoCoinsInfoById = {
+  data: this.geckoCoinsInfo.data.slice(0, 3),
+};
+
+CryptoCoinsTestData.expectedCoinsInfo = this.geckoCoinsInfo.data.map((coinInfo) => {
   const {
     id, symbol, current_price: currentPrice, name, image, last_updated: lastUpdated,
   } = coinInfo;
@@ -154,3 +158,47 @@ CryptoCoinsData.expectedCoinsInfo = this.geckoCoinsInfo.data.map((coinInfo) => {
     id, symbol, price: currentPrice, name, image, last_updated: lastUpdated,
   };
 });
+
+CryptoCoinsTestData.cryptoCoins = this.geckoCoinsInfoById.data.map(
+  ({ id: externalId }) => ({ external_id: externalId }),
+);
+
+CryptoCoinsTestData.geckoCoinsInfoByIdArs = {
+  data: this.geckoCoinsInfoById.data.map((data) => ({ ...data, current_price: 10 })),
+};
+
+CryptoCoinsTestData.geckoCoinsInfoByIdEur = {
+  data: this.geckoCoinsInfoById.data.map((data) => ({ ...data, current_price: 20 })),
+};
+
+CryptoCoinsTestData.geckoCoinsInfoByIdUsd = this.geckoCoinsInfoById;
+
+CryptoCoinsTestData.getTopCryptoCoinsInfoQuery = {
+  N: '2',
+};
+
+const firstTopCoinIndex = 2;
+const secondTopCoinIndex = 0;
+
+CryptoCoinsTestData.expectedTopCryptoCoinsInfo = [
+  {
+    id: this.geckoCoinsInfoById.data[firstTopCoinIndex].id,
+    name: this.geckoCoinsInfoById.data[firstTopCoinIndex].name,
+    symbol: this.geckoCoinsInfoById.data[firstTopCoinIndex].symbol,
+    image: this.geckoCoinsInfoById.data[firstTopCoinIndex].image,
+    last_updated: this.geckoCoinsInfoById.data[firstTopCoinIndex].last_updated,
+    ars_price: this.geckoCoinsInfoByIdArs.data[firstTopCoinIndex].current_price,
+    eur_price: this.geckoCoinsInfoByIdEur.data[firstTopCoinIndex].current_price,
+    usd_price: this.geckoCoinsInfoByIdUsd.data[firstTopCoinIndex].current_price,
+  },
+  {
+    id: this.geckoCoinsInfoById.data[secondTopCoinIndex].id,
+    name: this.geckoCoinsInfoById.data[secondTopCoinIndex].name,
+    symbol: this.geckoCoinsInfoById.data[secondTopCoinIndex].symbol,
+    image: this.geckoCoinsInfoById.data[secondTopCoinIndex].image,
+    last_updated: this.geckoCoinsInfoById.data[secondTopCoinIndex].last_updated,
+    ars_price: this.geckoCoinsInfoByIdArs.data[secondTopCoinIndex].current_price,
+    eur_price: this.geckoCoinsInfoByIdEur.data[secondTopCoinIndex].current_price,
+    usd_price: this.geckoCoinsInfoByIdUsd.data[secondTopCoinIndex].current_price,
+  },
+];

@@ -5,21 +5,19 @@ const sandbox = require('sinon').createSandbox();
 const axios = require('axios');
 
 const app = require('../../../src/index');
-const JWT = require('../../../src/utils/JWT');
 const {
   statusCodes: {
-    OK, BAD_REQUEST, UNAUTHORIZED, BAD_GATEWAY,
+    OK, BAD_REQUEST, UNAUTHORIZED, BAD_GATEWAY, NOT_FOUND,
   },
 } = require('../../../src/constants/HttpConstants');
-const CryptoCoinsData = require('../../data/CryptoCoinsData');
+const CryptoCoinsData = require('../../data/CryptoCoinsTestData');
+const UsersTestData = require('../../data/UsersTestData');
 
 chai.use(chaiHttp);
 
 const CRYPTO_COINS_PATH = '/crypto-coins';
 
 describe('Crypto coins integration test', () => {
-  const token = JWT.generateToken({ user_id: 1, username: 'wolox' });
-
   afterEach(() => {
     sandbox.restore();
   });
@@ -31,7 +29,7 @@ describe('Crypto coins integration test', () => {
 
       beforeEach(async () => {
         sandbox.stub(axios, 'get').resolves(CryptoCoinsData.geckoCoinsInfo);
-        ({ body, status } = await chai.request(app).get(CRYPTO_COINS_PATH).set('TOKEN', token));
+        ({ body, status } = await chai.request(app).get(CRYPTO_COINS_PATH).set('TOKEN', UsersTestData.token));
       });
 
       it('Should return an Ok status', () => {
@@ -56,7 +54,7 @@ describe('Crypto coins integration test', () => {
       it('Should throw an error when the pagination parameter are below 0', async () => {
         const { body: { error: { message } }, status } = await chai.request(app)
           .get(CRYPTO_COINS_PATH)
-          .set('TOKEN', token)
+          .set('TOKEN', UsersTestData.token)
           .query({ page: '-1' });
 
         assert.strictEqual(status, BAD_REQUEST);
@@ -68,10 +66,19 @@ describe('Crypto coins integration test', () => {
 
         const { body: { error: { message } }, status } = await chai.request(app)
           .get(CRYPTO_COINS_PATH)
-          .set('TOKEN', token);
+          .set('TOKEN', UsersTestData.token);
 
         assert.strictEqual(status, BAD_GATEWAY);
         assert.strictEqual(message, 'Internal error, please contact administrator');
+      });
+
+      it('Should throw an error if the token user does not exist', async () => {
+        const { body: { error: { message } }, status } = await chai.request(app)
+          .get(CRYPTO_COINS_PATH)
+          .set('TOKEN', UsersTestData.invalidUserToken);
+
+        assert.strictEqual(status, NOT_FOUND);
+        assert.strictEqual(message, 'Username wat not found');
       });
     });
   });

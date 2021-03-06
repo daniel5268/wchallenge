@@ -9,7 +9,7 @@ module.exports = (req, _, next) => {
   try {
     const token = req.header('TOKEN');
 
-    if (!token) throw new UnauthorizedError('TOKEN must be provided');
+    if (!token) throw new UnauthorizedError();
 
     const { user_id: userId, username } = JWT.verify(token);
     req.user_id = userId;

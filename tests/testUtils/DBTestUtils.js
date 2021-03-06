@@ -1,13 +1,17 @@
 const DBTestUtils = module.exports;
 
 const db = require('../../src/utils/DB');
-const { USERS } = require('../../src/constants/TableNames');
+const { USERS, USERS_CRYPTO_COINS, CRYPTO_COINS } = require('../../src/constants/TableNames');
 
-DBTestUtils.truncateTable = (tableName) => db(tableName).truncate();
+DBTestUtils.resetId = (tableName) => db.schema.raw(`ALTER SEQUENCE ${tableName}_id_seq RESTART WITH 1`);
 
 DBTestUtils.cleanDatabase = async () => {
+  await db(USERS_CRYPTO_COINS).truncate();
   await Promise.all([
-    this.truncateTable(USERS),
+    db(USERS).delete(),
+    db(CRYPTO_COINS).delete(),
+    this.resetId(USERS),
+    this.resetId(CRYPTO_COINS),
   ]);
 };
 
