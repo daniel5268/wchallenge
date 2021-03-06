@@ -25,15 +25,17 @@
     "eslint-plugin-import": "^2.22.1",
     "mocha": "^8.3.0",
     "nodemon": "^2.0.7",
-    "nyc": "^15.1.0"
+    "nyc": "^15.1.0",
+    "swagger-jsdoc": "^3.5.0"
   },
   "scripts": {
-    "nycTest": "node_modules/.bin/nyc node_modules/.bin/mocha --timeout 20000 --exit tests/**/**Test.js",
+    "nyc": "node_modules/.bin/nyc node_modules/.bin/mocha --timeout 20000 --exit tests/**/**Test.js",
     "test": "node_modules/.bin/mocha --timeout 20000 --exit tests/**/**Test.js",
     "lint": "node_modules/.bin/eslint .",
     "knex": "node_modules/.bin/knex",
     "start": "node src/index.js",
     "coverage": "node_modules/.bin/nyc check-coverage --lines 85",
+    "docs": "rm -rf apidoc && mkdir apidoc && swagger-jsdoc -d docs/SwaggerConfig.js -o apidoc/apidoc.yaml",
     "dev": "nodemon src/index.js"
   },
   "repository": {

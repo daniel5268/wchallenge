@@ -11,6 +11,23 @@ const { statusCodes: { CREATED } } = require('../../constants/HttpConstants');
 
 const PACKAGE_NAME = 'UsersController';
 
+/**
+ * @swagger
+ * /users:
+ *   post:
+ *     tags:
+ *       - Users
+ *     description: This method is used to create users
+ *     parameters:
+ *       - $ref: '#/components/parameters/apiKey'
+ *     requestBody:
+ *       $ref: '#/components/requestBodies/createUsers'
+ *     responses:
+ *       '201':
+ *         $ref: '#/components/responses/createdUsers'
+ *       'default':
+ *         $ref: '#/components/responses/error'
+ */
 UsersController.createUsers = (req, res, next) => {
   const section = `${PACKAGE_NAME}.createUsers`;
   const { body: usersInfo } = req;
@@ -29,6 +46,21 @@ UsersController.createUsers = (req, res, next) => {
   });
 };
 
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     tags:
+ *       - Users
+ *     description: This method is obtain the token required to consume this API endpoint
+ *     requestBody:
+ *       $ref: '#/components/requestBodies/login'
+ *     responses:
+ *       '200':
+ *         $ref: '#/components/responses/tokenInfo'
+ *       'default':
+ *         $ref: '#/components/responses/error'
+ */
 UsersController.login = (req, res, next) => {
   const section = `${PACKAGE_NAME}.login`;
   const { body: loginInfo } = req;
@@ -49,6 +81,24 @@ UsersController.login = (req, res, next) => {
   });
 };
 
+/**
+ * @swagger
+ * /users/{userId}/crypto-coins:
+ *   post:
+ *     tags:
+ *       - Users
+ *     description: This endpoint is used to add a crypto coins to a user
+ *     parameters:
+ *       - $ref: '#/components/parameters/token'
+ *       - $ref: '#/components/parameters/pathUserId'
+ *     requestBody:
+ *       $ref: '#/components/requestBodies/addCryptoCoin'
+ *     responses:
+ *       '200':
+ *         $ref: '#/components/responses/createdUsersCryptoCoins'
+ *       'default':
+ *         $ref: '#/components/responses/error'
+ */
 UsersController.addCryptoCoins = (req, res, next) => {
   const section = `${PACKAGE_NAME}.addCryptoCoins`;
   const { body, user_id: loggedUserId, params: { userId: targetUserId } } = req;
@@ -69,6 +119,22 @@ UsersController.addCryptoCoins = (req, res, next) => {
   });
 };
 
+/**
+ * @swagger
+ * /users/{userId}/crypto-coins/top:
+ *   get:
+ *     tags:
+ *       - Users
+ *     description: This endpoint is used to get the information about the most relevant crypto coins for the user
+ *     parameters:
+ *       - $ref: '#/components/parameters/token'
+ *       - $ref: '#/components/parameters/pathUserId'
+ *     responses:
+ *       '200':
+ *         $ref: '#/components/responses/topUsersCryptoCoins'
+ *       'default':
+ *         $ref: '#/components/responses/error'
+ */
 UsersController.getTopCryptoCoins = (req, res, next) => {
   const section = `${PACKAGE_NAME}.getTopCryptoCoins`;
   const {

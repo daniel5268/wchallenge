@@ -7,6 +7,23 @@ const Validator = require('../../utils/Validator');
 
 const PACKAGE_NAME = 'CryptoCoinsController';
 
+/**
+ * @swagger
+ * /crypto-coins:
+ *   get:
+ *     tags:
+ *       - Crypto coins
+ *     description: This endpoint is used to get the information about the existing crypto coins
+ *     parameters:
+ *       - $ref: '#/components/parameters/token'
+ *       - $ref: '#/components/parameters/page'
+ *       - $ref: '#/components/parameters/perPage'
+ *     responses:
+ *       '200':
+ *         $ref: '#/components/responses/cryptoCoins'
+ *       'default':
+ *         $ref: '#/components/responses/error'
+ */
 CryptoCoinsController.getCryptoCoinsInfo = (req, res, next) => {
   const section = `${PACKAGE_NAME}.getCryptoCoinsInfo`;
   logger.info(section, 'starts');

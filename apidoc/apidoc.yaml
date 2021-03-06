@@ -1,0 +1,385 @@
+openapi: 3.0.0
+info:
+  title: wChallenge
+  version: 1.0.0
+  description: 'Wrapper for the https://www.coingecko.com/en/api API'
+servers:
+  - url: 'http://localhost:3000'
+components:
+  parameters:
+    apiKey:
+      in: header
+      name: api_key
+      description: >-
+        A key to consume some of the api endpoints, please contact administrator
+        to obtain it
+      schema:
+        type: string
+        example: thisIsAnAPiKeyForThisAPI
+      required: true
+    token:
+      in: header
+      name: TOKEN
+      description: >-
+        a JWT (Json web token), containing the information to identify the user
+        in future requests
+      schema:
+        type: string
+        example: AGSRRVASSDHFDFVABDFadfagAbadfADGA
+      required: true
+    pathUserId:
+      in: path
+      name: userId
+      description: The target operation user_id
+      schema:
+        type: integer
+        example: 1
+      required: true
+    page:
+      in: query
+      name: page
+      description: The page to consult the existing crypto coins
+      schema:
+        type: string
+        example: '5'
+      required: false
+    perPage:
+      in: query
+      name: per_page
+      description: The number of crypto coins per page
+      schema:
+        type: string
+        example: '25'
+      required: false
+  requestBodies:
+    createUsers:
+      description: Endpoint to create new users
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 2
+                  maxLength: 50
+                  pattern: '^[A-Za-z]+$'
+                last_name:
+                  type: string
+                  minLength: 2
+                  maxLength: 50
+                  pattern: '^[A-Za-z]+$'
+                username:
+                  type: string
+                  minLength: 2
+                  maxLength: 50
+                  pattern: '^[A-Za-z0-9]+$'
+                password:
+                  type: string
+                  minLength: 8
+                  maxLength: 50
+                  pattern: '^[A-Za-z0-9]+$'
+                preferred_coin:
+                  type: string
+                  enum:
+                    - EUR
+                    - USD
+                    - ARS
+              additionalProperties: false
+              required:
+                - name
+                - last_name
+                - username
+                - password
+                - preferred_coin
+            minItems: 1
+    login:
+      description: The signin information
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                minLength: 1
+                maxLength: 50
+              password:
+                type: string
+                minLength: 1
+                maxLength: 50
+            additionalProperties: false
+            required:
+              - username
+              - password
+    addCryptoCoin:
+      description: >-
+        a body containing the crypto coin ids, those ids can be consulted in
+        this API
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              crypto_coin_ids:
+                type: array
+                items:
+                  type: string
+                  minLength: 1
+                  maxLength: 50
+                minItems: 1
+                uniqueItems: true
+            required:
+              - crypto_coin_ids
+            additionalProperties: false
+  responses:
+    createdUsers:
+      description: The created users information (excluding password)
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                name:
+                  type: string
+                  example: Mike
+                last_name:
+                  type: string
+                  example: Mendez
+                username:
+                  type: string
+                  example: Mike
+                preferred_coin:
+                  type: string
+                  example: ARS
+                created_at:
+                  type: string
+                  format: date-time
+                  example: '2020-05-27T03:02:33Z'
+                updated_at:
+                  type: string
+                  format: date-time
+                  example: '2020-05-27T03:02:33Z'
+    tokenInfo:
+      description: The token to consume with the expiration time in seconds
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                example: ASDFDSAasdfasdASGWESRsafgsDGASRSfgasGRAsrH
+              expiration_time:
+                type: integer
+                example: 7200
+    createdUsersCryptoCoins:
+      description: >-
+        The created users crypto coins (relation between the user and the crypto
+        coin)
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                user_id:
+                  type: integer
+                  example: 2
+                crypto_coin_id:
+                  type: integer
+                  example: 3
+                created_at:
+                  type: string
+                  format: date-time
+                  example: '2020-05-27T03:02:33Z'
+                updated_at:
+                  type: string
+                  format: date-time
+                  example: '2020-05-27T03:02:33Z'
+    cryptoCoins:
+      description: The best paid crypto coins in the user's preferred coin
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: bitcoin
+                name:
+                  type: string
+                  example: Bitcoin
+                symbol:
+                  type: string
+                  example: btc
+                image:
+                  type: string
+                  example: www.images.com/2
+                price:
+                  type: number
+                  example: 12434.5
+                last_updated:
+                  type: string
+                  format: date
+    topUsersCryptoCoins:
+      description: The best paid crypto coins in the user's preferred coin
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: bitcoin
+                name:
+                  type: string
+                  example: Bitcoin
+                symbol:
+                  type: string
+                  example: btc
+                image:
+                  type: string
+                  example: www.images.com/2
+                ars_price:
+                  type: number
+                  example: 12434.5
+                uer_price:
+                  type: number
+                  example: 12434.5
+                usd_price:
+                  type: number
+                  example: 12434.5
+                last_updated:
+                  type: string
+                  format: date
+    healthCheck:
+      description: Endpoint to check if the service is available
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              service_status:
+                type: string
+                example: ok
+    error:
+      description: >-
+        An error will be returned with the most accurate status and a message
+        describing what occurred
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 404
+              message:
+                type: string
+                example: Not found
+tags:
+  - name: Users
+    description: Operations related to the management of users
+  - name: Service status
+    description: Operations to the check the service status
+  - name: Crypto coins
+    description: Operations related to the crypto coins
+paths:
+  /crypto-coins:
+    get:
+      tags:
+        - Crypto coins
+      description: >-
+        This endpoint is used to get the information about the existing crypto
+        coins
+      parameters:
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/perPage'
+      responses:
+        '200':
+          $ref: '#/components/responses/cryptoCoins'
+        default:
+          $ref: '#/components/responses/error'
+  /health-check:
+    get:
+      tags:
+        - Service status
+      description: This endpoint is used check if the server is on
+      responses:
+        '200':
+          $ref: '#/components/responses/healthCheck'
+        default:
+          $ref: '#/components/responses/error'
+  /users:
+    post:
+      tags:
+        - Users
+      description: This method is used to create users
+      parameters:
+        - $ref: '#/components/parameters/apiKey'
+      requestBody:
+        $ref: '#/components/requestBodies/createUsers'
+      responses:
+        '201':
+          $ref: '#/components/responses/createdUsers'
+        default:
+          $ref: '#/components/responses/error'
+  /login:
+    post:
+      tags:
+        - Users
+      description: This method is obtain the token required to consume this API endpoint
+      requestBody:
+        $ref: '#/components/requestBodies/login'
+      responses:
+        '200':
+          $ref: '#/components/responses/tokenInfo'
+        default:
+          $ref: '#/components/responses/error'
+  '/users/{userId}/crypto-coins':
+    post:
+      tags:
+        - Users
+      description: This endpoint is used to add a crypto coins to a user
+      parameters:
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/pathUserId'
+      requestBody:
+        $ref: '#/components/requestBodies/addCryptoCoin'
+      responses:
+        '200':
+          $ref: '#/components/responses/createdUsersCryptoCoins'
+        default:
+          $ref: '#/components/responses/error'
+  '/users/{userId}/crypto-coins/top':
+    get:
+      tags:
+        - Users
+      description: >-
+        This endpoint is used to get the information about the most relevant
+        crypto coins for the user
+      parameters:
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/pathUserId'
+      responses:
+        '200':
+          $ref: '#/components/responses/topUsersCryptoCoins'
+        default:
+          $ref: '#/components/responses/error'
